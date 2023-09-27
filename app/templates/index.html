@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Flask App</title>
+        <style>
+            table,
+            td,
+            th {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            td,
+            th {
+                padding: 10px;
+            }
+        </style>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    </head>
+    <body>
+        <h1 style="color:green; font-weight: 600;">🐸대전 스매시클럽 월례대회 팀 제작기🥎</h1>
+
+        <div style="margin-bottom: 5px">참여자의 이름을 입력하세요. 추가 참여자는 추가로 입력해야 합니다.</div>
+
+        <div style="margin-bottom: 20px">
+            <button id="add-input-button">칸 추가</button>
+            <button id="submit-button">제출</button>
+        </div>
+
+        <div style="margin-bottom: 20px">
+            <div id="players"></div>
+        </div>
+
+        <h3 style="margin-bottom: 20px">
+            결과창
+
+            <table id="myTable"></table>
+        </div>
+
+        <script>
+            선수목록 = [
+                '정재은',
+                '정관윤',
+                '우성재',
+                '조덕원',
+                '김유화',
+                '박청용',
+                '박은규',
+                '김좌순',
+                '김재식',
+                '홍정은',
+                '이익주',
+                '이상',
+                '박지영',
+                '유소이',
+                '박지훈',
+                '유용재',
+                '조태원',
+                '김혜영',
+            ];
+            window.onload = function () {
+                for (i = 1; i < 19; i++) {
+                    const newInput = document.createElement('input');
+                    newInput.id = `input-${i}`;
+                    newInput.style.width = '50px';
+                    newInput.style.marginRight = '20px';
+                    newInput.value = 선수목록[i - 1];
+                    document.getElementById('players').appendChild(newInput);
+                }
+            };
+
+            let inputCount = 19;
+
+            document.getElementById('add-input-button').addEventListener('click', function () {
+                const newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.id = 'input-' + inputCount;
+                newInput.style.width = '50px';
+                newInput.style.marginRight = '20px';
+                document.getElementById('players').appendChild(newInput);
+                inputCount++;
+            });
+
+            document.getElementById('submit-button').addEventListener('click', function () {
+                const inputData = [];
+                for (let i = 1; i <= inputCount - 1; i++) {
+                    const input = document.getElementById('input-' + i);
+                    if (input) {
+                        // 요소가 존재하는지 확인
+                        if (input.value.trim() === '') {
+                            // 값이 입력되지 않았을 경우 메시지 출력
+                            alert('값이 입력되지 않았습니다.');
+                            return; // 함수 종료
+                        }
+                        inputData.push(input.value);
+                    } else {
+                        console.error('Element with ID input-' + i + ' not found.');
+                    }
+                }
+                const dataToSend = inputData.join(', ');
+                console.log(inputData);
+
+                const apiUrl = '/result';
+                const urlWithQuery = apiUrl + '?data=' + encodeURIComponent(dataToSend);
+
+                fetch(urlWithQuery)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('네트워크 오류');
+                        }
+                        return response.json(); // JSON 형식으로 응답을 파싱
+                    })
+                    .then((result) => {
+                        // API 응답(result)을 처리
+                        console.log(result);
+                        var data = JSON.parse(result);
+
+                        var table = document.getElementById('myTable');
+                        table.innerHTML = '';
+
+                        for (var i = 0; i < data.length; i++) {
+                            var rowData = data[i];
+                            var row = document.createElement('tr');
+
+                            for (var j = 0; j < rowData.length; j++) {
+                                var cellData = rowData[j];
+                                var cell = document.createElement('td');
+                                cell.style.fontSize = '13px';
+
+                                // 4개의 JSON 데이터를 순회하면서 이름과 팀 정보를 가져와서 텍스트로 설정
+                                for (var k = 0; k < cellData.length; k++) {
+                                    var player = cellData[k];
+                                    var text = document.createTextNode(
+                                        `(${player.이름}:${player.팀}[게임수 : ${player.게임수}])`
+                                    );
+
+                                    cell.appendChild(text);
+                                }
+
+                                row.appendChild(cell);
+                            }
+
+                            table.appendChild(row);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('API 요청 오류:', error);
+                    });
+            });
+        </script>
+    </body>
+</html>
