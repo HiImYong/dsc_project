@@ -129,14 +129,14 @@ def result():
         player_name = f"player_{idx}"
 
         if blue_red_buffer == 0:
-            team = '청'  # 37
+            team = '청'  
             globals()[player_name] = Player(user.name, user.level, team, 0)
             player_ins = globals().get(player_name)
             all_player_info.append(vars(player_ins))
             all_blue_cnt += 1
 
         else:
-            team = '홍'  # 35
+            team = '홍' 
             globals()[player_name] = Player(user.name, user.level, team, 0)
             player_ins = globals().get(player_name)
             all_player_info.append(vars(player_ins))
@@ -148,6 +148,7 @@ def result():
             blue_red_buffer = 0
 
     biggerTeam = ''
+
     홍버퍼 = 36
     청버퍼 = 36
 
@@ -186,21 +187,9 @@ def result():
     36/청
     36/홍
     나눈 수로 빅, 스몰을 올림 내림 잡자주자.
-
-        소수점계산 = 72/user_cnt
-    big_game = math.ceil(소수점계산)
-    small_game = math.floor(소수점계산)
     """
 
-    # 소수점계산 = 72/user_cnt
-    # blue_big_game = math.ceil(소수점계산)
-    # blue_small_game = math.floor(소수점계산)
-
-    
-    # red_big_game = math.ceil(소수점계산)
-    # red_small_game = math.floor(소수점계산)
-
-    블루소수점계산 = 36/all_blue_cnt
+    블루소수점계산 = 청버퍼/all_blue_cnt
     blue_big_game = math.ceil(블루소수점계산)
     blue_small_game = math.floor(블루소수점계산)
     print('~~~~~')
@@ -209,14 +198,12 @@ def result():
     print(blue_small_game)
 
     print('!!')
-    레드소수점계산 = 36/all_red_cnt
+    레드소수점계산 = 청버퍼/all_red_cnt
     red_big_game = math.ceil(레드소수점계산)
     red_small_game = math.floor(레드소수점계산)    
     print(all_red_cnt)
     print(red_big_game)
     print(red_small_game)
-
-    
 
 
     # 연립방정식
@@ -224,36 +211,18 @@ def result():
     blue_equation2 = Eq(a + b, all_blue_cnt)
     blue_solution = solve((blue_equation1, blue_equation2), (a, b))
 
-    if b not in blue_solution:
-        temp = blue_solution[a]
-        blue_solution[a] = temp + b
-        blue_solution[b] = 0
-
-
     red_equation1 = Eq(red_big_game*a + red_small_game*b, 홍버퍼)
     red_equation2 = Eq(a + b, all_red_cnt)
     red_solution = solve((red_equation1, red_equation2), (a, b))
-
-    if b not in red_solution:
-        temp = red_solution[a]
-        red_solution[a] = temp + b
-        red_solution[b] = 0    
 
     print('방정식의 해')
     print(blue_solution)
     print(red_solution)
 
-    blue_big = blue_solution[a]
-    blue_small = blue_solution[b]
-    red_big = red_solution[a]
-    red_small = red_solution[b]
-
-    print('방정식 변수 이동')
-    print(blue_big)
-    print(blue_small)
-    print(red_big)
-    print(red_small)
-
+    blue_big = blue_solution.get('a', 0)
+    blue_small = blue_solution.get('b', 0)
+    red_big = red_solution.get('a', 0)
+    red_small = red_solution.get('b', 0)
 
     청팀인원카운트용 = copy.deepcopy(all_blue_cnt)
     홍팀인원카운트용 = copy.deepcopy(all_red_cnt)
@@ -266,62 +235,57 @@ def result():
 
     for player in all_player_info:
 
-        해당선수의게임수 = 0
+        cnt_game_per_man = 0
 
-        print(player)
-        print('.....')
+        # print(player)
 
         if player['팀'] == '청' and 청팀인원카운트용 != 0:
 
             if blue_small > 0 and 청팀인원카운트용 == blue_small and blue_small != 0:
-                해당선수의게임수 = blue_small_game
+                cnt_game_per_man = blue_small_game
                 blue_small -= 1
                 청팀인원카운트용 -= 1
-                
 
             elif blue_small > 0 and blue_big > 0:
-                해당선수의게임수 = random.choice([blue_big_game, blue_small_game])
-                if 해당선수의게임수 == blue_small_game:
+                cnt_game_per_man = random.choice([blue_big_game, blue_small_game])
+                if cnt_game_per_man == blue_small_game:
                     # three_game -= 1
                     blue_small -= 1
                     청팀인원카운트용 -= 1
-                elif 해당선수의게임수 == blue_big_game:
+                elif cnt_game_per_man == blue_big_game:
                     # three_game -= 1
                     blue_big -= 1
                     청팀인원카운트용 -= 1
 
             elif blue_small == 0 and blue_big > 0:
-                해당선수의게임수 = blue_big_game
+                cnt_game_per_man = blue_big_game
                 청팀인원카운트용 -= 1
                 blue_big -= 1
-            
-            
 
         if player['팀'] == '홍' and 홍팀인원카운트용 != 0:
 
             if red_small > 0 and 홍팀인원카운트용 == red_small and red_small != 0:
-                해당선수의게임수 = red_small_game
+                cnt_game_per_man = red_small_game
                 red_small -= 1
                 홍팀인원카운트용 -= 1
 
             elif red_small > 0 and red_big > 0:
-                해당선수의게임수 = random.choice([red_big_game, red_small_game])
-                if 해당선수의게임수 == red_small_game:
+                cnt_game_per_man = random.choice([red_big_game, red_small_game])
+                if cnt_game_per_man == red_small_game:
                     # three_game -= 1
                     red_small -= 1
                     홍팀인원카운트용 -= 1
-                elif 해당선수의게임수 == red_big_game:
+                elif cnt_game_per_man == red_big_game:
                     # three_game -= 1
                     red_big -= 1
                     홍팀인원카운트용 -= 1
 
             elif red_small == 0:
-                해당선수의게임수 = red_big_game
+                cnt_game_per_man = red_big_game
                 홍팀인원카운트용 -= 1
                 red_big -= 1
 
-        player['게임수'] = 해당선수의게임수
-        print('해당선수의게임수 >> ', 해당선수의게임수)
+        player['게임수'] = cnt_game_per_man
 
     sorted_all_players_2 = sorted(all_player_info, key=lambda x: x['팀'])
 
@@ -330,8 +294,8 @@ def result():
     row_cnt = [12, 12, 12, 12, 12, 12]
 
 
-    # print('>> 랜덤배치 시작')
-    # print(sorted_all_players_2)
+    print('>> 랜덤배치 시작')
+    print(sorted_all_players_2)
     for player in sorted_all_players_2:
 
         game_circuit_cnt = player['게임수']
@@ -357,40 +321,29 @@ def result():
 
             if current_cnt == 4:
                 continue
-            # print('------------------')
-            # print(sorted_all_players_2)
-            # print('총원')
-            # print(user_cnt)
-            # print('블루팀총원 > ', all_blue_cnt)
-            # print('레드팀총원 > ', all_red_cnt)
+            print('------------------')
+            print(sorted_all_players_2)
+            print('총원')
+            print(user_cnt)
+            print('레드팀총원 > ', all_red_cnt)
+            print('블루팀총원 > ', all_blue_cnt)
 
-            # print(청팀인원카운트용)
-            # print(홍팀인원카운트용)
-            # print('카운트마이너스')
-            # print('파', blue_small)
-            # print('빨', red_small)
-            # print('파', blue_big)
-            # print('빨', red_big)
+            print(청팀인원카운트용)
+            print(홍팀인원카운트용)
+            print('-------------')
+            # print(blue_small)
+            # print(red_small)
+            # print(blue_big)
+            # print(red_big)
             # print(row_cnt)
-            # print('초기게임수')
-            # print('파', all_blue_cnt)
-            # print('파', blue_big_game)
-            # print('파', blue_small_game)
-            # print('빨', all_red_cnt)
-            # print('빨', red_big_game)
-            # print('빨', red_small_game)    
-            # print('방정식의 해')
-            # print('파', blue_solution)            
-            # print('빨', red_solution)
-
             # print('현재 행렬 >> ', row, ' / ', col)
             # print('player >>> ', player)
-            # print(tournament_mtx)
+            print(tournament_mtx)
             red_cnt = 0
             blue_cnt = 0
 
             for item in current_list:
-                # print(item)
+                print(item)
                 if item['팀'] == '홍':
                     red_cnt += 1
                 if item['팀'] == '청':
@@ -398,12 +351,12 @@ def result():
 
             if player['팀'] == '홍':
                 if red_cnt == 2:
-                    # print('홍이 더 많거나 이미 다 참')
+                    print('홍이 더 많거나 이미 다 참')
                     continue
 
             if player['팀'] == '청':
                 if blue_cnt == 2:
-                    # print('청이 더 많거나 이미 다 참')
+                    print('청이 더 많거나 이미 다 참')
                     continue
 
             # 플레이어 정보 확인 여부를 나타내는 변수
@@ -431,7 +384,7 @@ def result():
                 row_cnt[row] = row_cnt[row] - 1
 
     arr_as_list = tournament_mtx.tolist()
-    # print(arr_as_list)
+    print(arr_as_list)
     json_data = json.dumps(arr_as_list, ensure_ascii=False)
 
     return jsonify(json_data)
