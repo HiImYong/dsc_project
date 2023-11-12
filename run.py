@@ -7,4 +7,5 @@ if __name__ == '__main__': # 현재 파일이 직접 실행될 때만 코드 블
 
 
 
-# 실행 : dsc_project> python .\run.py
+# 서버 실행 :  D:\dsc_project> python .\run.py
+# 리액트 실행 : D:\dsc_project\my-react-app> npm start
