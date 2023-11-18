@@ -2,6 +2,7 @@ import copy
 import json
 import math
 import random
+from flask_cors import cross_origin
 from sympy import symbols, Eq, solve
 from flask import jsonify, render_template, request
 from app import app
@@ -29,28 +30,29 @@ def index():
 
 
 @app.route('/result/', methods=['GET'])
+@cross_origin()
 def result():
     data = request.args.get('data')
 
     parsed_data = data.split(', ')
-    users = []
+    users = parsed_data
 
-    print(data)
-    print(type(data))
-    # users = User.query.filter_by(name='유용재').first()
+    # print(data)
+    # print(type(data))
+    # # users = User.query.filter_by(name='유용재').first()
 
-    for input_user in parsed_data:
-        try:
-            user = User.query.filter_by(name=input_user).first()
-            if user is not None:
-                users.append(user)
-                print(f"사용자 이름: {user.name}")
-            else:
-                msg = f"'{input_user}' 데이터는 존재하지 않습니다."
-                print(msg)
-                return msg
-        except Exception as e:
-            print(e)
+    # for input_user in parsed_data:
+    #     try:
+    #         user = User.query.filter_by(name=input_user).first()
+    #         if user is not None:
+    #             users.append(user)
+    #             print(f"사용자 이름: {user.name}")
+    #         else:
+    #             msg = f"'{input_user}' 데이터는 존재하지 않습니다."
+    #             print(msg)
+    #             return msg
+    #     except Exception as e:
+    #         print(e)
 
     print('유저목록 : ', users)
     random.shuffle(users)
@@ -64,11 +66,11 @@ def result():
     user_level_1 = 0
 
     for user in users:
-        if user.level == '3':
+    f 0 == '3':
             user_level_3 += 1
-        elif user.level == '2':
+      f 0 == '2':
             user_level_2 += 1
-        elif user.level == '1':
+      f 0 == '1':
             user_level_1 += 1
 
     blue_team_cnt_3 = 0
@@ -130,14 +132,14 @@ def result():
 
         if blue_red_buffer == 0:
             team = '청'  # 37
-            globals()[player_name] = Player(user.name, user.level, team, 0)
+            globals()[player_name] = Player(user, 0, team, 0)
             player_ins = globals().get(player_name)
             all_player_info.append(vars(player_ins))
             all_blue_cnt += 1
 
         else:
             team = '홍'  # 35
-            globals()[player_name] = Player(user.name, user.level, team, 0)
+            globals()[player_name] = Player(user, 0, team, 0)
             player_ins = globals().get(player_name)
             all_player_info.append(vars(player_ins))
             all_red_cnt += 1

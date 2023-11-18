@@ -69,15 +69,15 @@ const _onDrop = e => {
   let pos = e.target.getAttribute('data-pos')
   dropData = {"row" : row, "col" : col, "pos" : pos, "value" : apiData[row][col][pos]}
 
-  if (dragData.value.팀 != dropData.value.팀){
+  if (dragData.value.팀 !== dropData.value.팀){
     alert(`다른 팀 끼리는 위치변경이 불가합니다. '제출'을 눌러 다시 매치를 만들어주세요.`)
     return;
   }  
 
  for (const col of apiData[row]){
   for (const pos of col){
-    if (dragData.value.이름 == pos.이름){
-      if(dragData.row == dropData.row){
+    if (dragData.value.이름 === pos.이름){
+      if(dragData.row === dropData.row){
         continue;
       }
       else{
