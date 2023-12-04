@@ -9,7 +9,10 @@ from flask_cors import CORS
 # Flask 클래스의 생성자에 현재 모듈의 이름을 전달하고 있습니다.
 # 여기서 현재 모듈은 __init__.py 파일을 말합니다.
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+#CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/result": {"origins": "*"}})
+
+
 
 app.config.from_object(Config)
 

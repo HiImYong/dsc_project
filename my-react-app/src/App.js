@@ -175,7 +175,7 @@ const _onDrop = e => {
     const dataToSend = inputData.join(', ');
     // console.log(inputData);
 
-    const apiUrl = 'http://127.0.0.1:5000/result';
+    const apiUrl = 'http://13.208.97.176:5000/result';
     const urlWithQuery = apiUrl + '?data=' + encodeURIComponent(dataToSend);
 
     try {
@@ -305,7 +305,7 @@ const _onDrop = e => {
         ))}
       </div>
 
-      <h3 style={{ marginBottom: '20px' }}>결과창</h3>
+      <h3 style={{ marginBottom: '20px' }}>결과창(🤗결과에 나온 선수의 위치를 마우스로 변경할 수 있어요!)</h3>
 
       <table id="myTable">
 
